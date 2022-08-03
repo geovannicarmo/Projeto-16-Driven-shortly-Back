@@ -1,5 +1,6 @@
 import { schemaSingUp } from "../../schemas/schemasAuthetication.js"
 import connection from "../../dbs strategy/postgres.js"
+import bcrypt from 'bcrypt'
 
 export async function singUp(req, res){
 
@@ -16,8 +17,12 @@ export async function singUp(req, res){
         
         const isemail = await connection.query('SELECT * FROM users')
 
+        //cryptography password
+        const passwordCrypt = bcrypt.hashSync(dataSingUp.password, 10)
+        console.log(passwordCrypt)
+
         await connection.query(`INSERT INTO users(email, username, password)
-        VALUES($1, $2, $3)`, [dataSingUp.email, dataSingUp.name, dataSingUp.password])
+        VALUES($1, $2, $3)`, [dataSingUp.email, dataSingUp.name, passwordCrypt])
 
 
         return res.sendStatus(201)
