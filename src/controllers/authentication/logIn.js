@@ -30,11 +30,11 @@ export async function logIn(req, res){
     // creat token
     const iduser = {idUser: user.rows[0].id}
     const secretKey = process.env.JWT_SECRET
-    const config = { expiresIn: 200 }
+    const config = { expiresIn: 60*60 }
 
     const token = Jwt.sign(iduser, secretKey, config)
 
     return res.status(200).send(token)
 
-    //const dados = Jwt.verify(token, secretKey);
+    
 }
