@@ -21,7 +21,7 @@ export async function logIn(req, res){
         return res.sendStatus(401)
     }
 
-    const hashPassaword = user.rows[0].password
+    const hashPassaword = user.rows[0].password_hash
 
     if(!bcrypt.compareSync(dataLogIn.password, hashPassaword)){
         return res.sendStatus(401)

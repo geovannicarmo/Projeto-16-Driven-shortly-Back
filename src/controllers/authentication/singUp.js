@@ -19,9 +19,8 @@ export async function singUp(req, res){
 
         //cryptography password
         const passwordCrypt = bcrypt.hashSync(dataSingUp.password, 10)
-        console.log(passwordCrypt)
 
-        await connection.query(`INSERT INTO users(email, username, password)
+        await connection.query(`INSERT INTO users(email, name, password_hash)
         VALUES($1, $2, $3)`, [dataSingUp.email, dataSingUp.name, passwordCrypt])
 
 
