@@ -20,7 +20,6 @@ const {Pool} = pg;
 //     port,
 //     database
 //   })
-
 const databaseConfig = {
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -28,4 +27,6 @@ const databaseConfig = {
   }
 }
 
-export default connection
+const connection = new Pool(databaseConfig);
+
+export default connection;
