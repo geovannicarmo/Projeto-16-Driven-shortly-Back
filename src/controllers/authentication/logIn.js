@@ -4,8 +4,10 @@ import Jwt  from 'jsonwebtoken';
 import { authRepositories } from "../../repositories/authRepositories.js";
 
 export async function logIn(req, res){
-    const dataLogIn = req.body
-    const validade = schemaLogIn.validate(dataLogIn, {abortEarly: false})
+    try{
+
+        const dataLogIn = req.body
+        const validade = schemaLogIn.validate(dataLogIn, {abortEarly: false})
 
     if(validade.error){
         const arrayError = validade.error.details.map(error=>error.message)
@@ -19,7 +21,7 @@ export async function logIn(req, res){
     }
 
     const hashPassaword = user.rows[0].password_hash
-
+    
     if(!bcrypt.compareSync(dataLogIn.password, hashPassaword)){
         return res.sendStatus(401)
     }
@@ -31,6 +33,9 @@ export async function logIn(req, res){
     const token = Jwt.sign(iduser, secretKey, config)
 
     return res.status(200).send(token)
+}catch{
+    return res.sendStatus(500)
+}
 
     
 }
