@@ -1,36 +1,29 @@
 import { schemaSingUp } from "../../schemas/schemasAuthetication.js"
-import connection from "../../dbs strategy/postgres.js"
 import bcrypt from 'bcrypt'
+import { authRepositories } from "../../repositories/authRepositories.js"
 
 export async function singUp(req, res){
-
     try{
         const  dataSingUp = req.body
         const validate =  schemaSingUp.validate(dataSingUp, {abortEarly: false})
         
         if(validate.error){
-
             const arrayError =  validate.error.details.map(error=>error.message)
-            console.log(arrayError)
-            return res.send(arrayError).status(422)
+            return res.status(422).send(arrayError)
         }
-        
-        const isemail = await connection.query('SELECT * FROM users')
 
-        //cryptography password
         const passwordCrypt = bcrypt.hashSync(dataSingUp.password, 10)
 
-        await connection.query(`INSERT INTO users(email, name, password_hash)
-        VALUES($1, $2, $3)`, [dataSingUp.email, dataSingUp.name, passwordCrypt])
+        const postNewUser = await authRepositories.postNewUser(dataSingUp.email, dataSingUp.name, passwordCrypt)
 
+        if(postNewUser=='23505'){
+            return res.sendStatus(409)
+        }
 
         return res.sendStatus(201)
     }
     catch(error){
-        console.log(error)
-        if(error.code==='23505'){
-            return res.sendStatus(409)
-        }
+
         return res.status(500).send(error.details)
     }
 }

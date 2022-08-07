@@ -1,15 +1,25 @@
-import connection from "../../dbs strategy/postgres.js";
+import { deleting } from "../../repositories/deleteUrlsRepositories.js";
 
 export async function deleteUrl(req, res){
 
     const idUrl = req.params.id
     const idUser = res.locals.idUser
+
+    const isUrl = await deleting.registeredUrl(idUrl);
+
+    if(isUrl===0){
+       return res.sendStatus(404)
+    }
+    if(!isUrl){
+        return res.sendStatus(500)
+     }
+    const isUrlDeleted = await deleting.deleteData(idUser, idUrl)
     
-    const deleteData =  await connection.query(`
-    DELETE FROM urls
-    WHERE  id = $1`, [idUrl])
-
-    console.log(deleteData)
-
-return res.sendStatus(200)
+    if(isUrlDeleted===0){
+        return res.sendStatus(401)
+    }
+    if(!isUrlDeleted){
+         return res.sendStatus(500)
+    }
+return res.sendStatus(204)
 } 
