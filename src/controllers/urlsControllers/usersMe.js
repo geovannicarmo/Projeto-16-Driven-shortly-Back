@@ -1,30 +1,27 @@
 import connection from "../../dbs strategy/postgres.js";
+import { getUrlsRepositories } from "../../repositories/getUrlsRepositories.js";
 
 export async function usersMe(req, res){
 
   const idUser = res.locals.idUser
 
-  const {rows: userName} = await connection.query(`
-  SELECT users.id, users.name, SUM(urls.visitcount) AS visitCountUser FROM users
+  let DataUser = await getUrlsRepositories.getDataUser(idUser)
 
-LEFT JOIN urls
-ON users.id=urls.id_user
-
-WHERE users.id=$1
-GROUP BY users.id`,[idUser])
-
-    if(userName.length===0){
+    if(DataUser.length===0){
         return res.sendStatus(404)
     }
 
-  const {rows: urlsUser} = await connection.query(`
-  SELECT id, "shortUrl", url, "visitcount" FROM urls
-  WHERE id_user = $1`,[idUser])
+    DataUser = DataUser[0]
 
-  console.log(userName)
-  console.log(urlsUser)
+  let shortenedUrls = await getUrlsRepositories.getDatashortenedUrls(idUser)
+    
+const resMe = {
+  id:DataUser.id, name:DataUser.name, visitCount: DataUser.visitcountuser, shortenedUrls
+}
 
-  return res.sendStatus(200)
+console.log(DataUser)
+
+  return res.status(200).send(resMe)
 
 
 }

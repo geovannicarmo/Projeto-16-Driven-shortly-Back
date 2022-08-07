@@ -1,21 +1,12 @@
-import connection from "../../dbs strategy/postgres.js"
+import { getUrlsRepositories } from "../../repositories/getUrlsRepositories.js"
 
 
 export async function ranking(req, res){
-
-    console.log(req.body)
     
-    const {rows: ranking} = await connection.query(`
-    SELECT users.id, name, COUNT(urls.id), SUM(urls.count_visit) 
-    FROM users 
-	LEFT JOIN urls 
-	ON users.id=id_user
-	
-	GROUP BY users.id
-    ORDER BY SUM(urls.count_visit) ASC
-    LIMIT 10
-    `)
+    const ranking = await getUrlsRepositories.getRanking()
     
-
-    res.send(ranking)
+    if(!ranking){
+        return res.sendStatus(500)
+    }
+    return res.send(ranking)
 }
