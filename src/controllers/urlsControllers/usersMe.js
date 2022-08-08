@@ -14,9 +14,15 @@ export async function usersMe(req, res){
     DataUser = DataUser[0]
 
   let shortenedUrls = await getUrlsRepositories.getDatashortenedUrls(idUser)
+
+  visitCount = DataUser.visitcountuser
+
+  if(visitCount===null){
+    visitCount=0
+  }
     
 const resMe = {
-  id:DataUser.id, name:DataUser.name, visitCount: DataUser.visitcountuser, shortenedUrls
+  id:DataUser.id, name:DataUser.name, visitCount, shortenedUrls
 }
 
 console.log(DataUser)
