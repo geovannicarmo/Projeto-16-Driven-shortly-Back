@@ -17,6 +17,8 @@ export async function getUrlsId(req, res){
             return res.sendStatus(404)
         }
         delete dataurls[0].id_user
+        delete dataurls[0].visitcount
+        delete dataurls[0].createdat
         return res.send(dataurls[0])
 
     }catch{
