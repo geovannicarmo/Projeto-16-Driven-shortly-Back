@@ -7,8 +7,6 @@ export async function getUrlsId(req, res){
         const id = req.params.id
         const dataurls = await getUrlsRepositories.getById(id)
         
-        console.log(id)
-        
         if(!dataurls){
             return res.sendStatus(500)
         }

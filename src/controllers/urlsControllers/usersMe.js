@@ -3,31 +3,36 @@ import { getUrlsRepositories } from "../../repositories/getUrlsRepositories.js";
 
 export async function usersMe(req, res){
 
-  const idUser = res.locals.idUser
+  try{
 
-  let DataUser = await getUrlsRepositories.getDataUser(idUser)
+      const idUser = res.locals.idUser
 
-    if(DataUser.length===0){
-        return res.sendStatus(404)
-    }
+      let DataUser = await getUrlsRepositories.getDataUser(idUser)
 
-    DataUser = DataUser[0]
+        if(DataUser.length===0){
+            return res.sendStatus(404)
+        }
 
-  let shortenedUrls = await getUrlsRepositories.getDatashortenedUrls(idUser)
+        DataUser = DataUser[0]
 
-  let visitCount = DataUser.visitcountuser
+      let shortenedUrls = await getUrlsRepositories.getDatashortenedUrls(idUser)
 
-  if(visitCount===null){
-    visitCount=0
-  }
-    
-const resMe = {
-  id:DataUser.id, name:DataUser.name, visitCount, shortenedUrls
+      let visitCount = DataUser.visitcountuser
+
+      if(visitCount===null){
+        visitCount=0
+      }
+        
+     const resMe = {
+      id:DataUser.id, name:DataUser.name, visitCount, shortenedUrls
+     }
+
+
+      return res.status(200).send(resMe)
+
+}catch{
+  return res.sendStatus(500)
 }
-
-console.log(DataUser)
-
-  return res.status(200).send(resMe)
 
 
 }

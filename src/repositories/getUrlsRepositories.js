@@ -10,7 +10,6 @@ async function getById(id){
         return dataurls
 
     }catch{
-        //console.log(error)
         return false
     }
 }
@@ -23,9 +22,7 @@ async function getByShort(shorten){
         WHERE "shortUrl" = $1
         RETURNING urls.url`
         ,[shorten])
-    //console.log(full_url)
         return full_url
-
     }catch(error){
         return false
     }

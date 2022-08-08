@@ -13,7 +13,6 @@ export async function middlewareVerifyToken(req, res, next){
         res.locals.idUser = idUser
         next()
     }catch(error){
-        console.log(error)
        return res.sendStatus(401)
     }
 
